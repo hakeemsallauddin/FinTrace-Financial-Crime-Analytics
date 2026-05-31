@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "aml-analytics"
@@ -51,3 +51,6 @@ target-version = ["py39"]
 [tool.flake8]
 max-line-length = 88
 exclude = [".git", "__pycache__", "dist"]
+
+[tool.setuptools.packages.find]
+include = ["aml*"]
