@@ -5,9 +5,7 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-Open-source Python toolkit for AML detection and financial crime analytics — transaction graph analysis, anomaly scoring, SAR pattern matching, and SQL helpers for BSA/FinCEN compliance.
-
-Built by a financial crimes analytics practitioner for compliance teams and data professionals working in anti-money laundering programs at financial institutions.
+Open-source Python toolkit for AML detection and financial crime as well as fraud analytics— transaction graph analysis, anomaly scoring, authorized push payment (APP) fraud detection, SAR pattern matching, and SQL helpers for BSA/FinCEN compliance.
 
 ---
 
@@ -39,6 +37,7 @@ Smaller financial institutions often lack the analytics infrastructure to detect
 | `aml/patterns.py` | Rules engine implementing FATF and FinCEN typologies |
 | `aml/anomaly.py` | Unsupervised anomaly scoring using Isolation Forest and LOF |
 | `aml/sql/` | Oracle and PostgreSQL query templates for AML detection |
+|`aml/fraud.py` |— Authorized Push Payment (APP) fraud scoring with explainable reason codes
 
 ---
 
@@ -47,6 +46,7 @@ Smaller financial institutions often lack the analytics infrastructure to detect
 ```python
 from aml.synthetic import generate_transactions
 from aml.graph import build_network, detect_structuring, detect_layering
+from aml.fraud import score_transactions
 
 # Generate synthetic transaction data
 txns = generate_transactions(n=1000)
@@ -60,10 +60,16 @@ rings = detect_structuring(G, threshold=9000)
 # Detect layering chains
 chains = detect_layering(G, min_hops=3)
 
+# score every payment 0-100 for APP fraud risk
+scored = score_transactions(transactions)
+
+# keep the payments worth reviewing
+alerts = scored[scored.app_fraud_score >= 60]
+
 print(f"Structuring alerts: {len(rings)}")
 print(f"Layering alerts:    {len(chains)}")
+print(alerts[["amount", "app_fraud_score", "reason_codes"]])
 ```
-
 ---
 
 ## Installation
