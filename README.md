@@ -21,6 +21,14 @@ The overview dashboard provides:
 - Dataset category profile
 
 ---
+## Live Demo
+
+**Try the deployed application:**  
+https://fintrace-financial-crime-analytics.streamlit.app/
+
+> The application is hosted on Streamlit Community Cloud. If it has been inactive, the first load may take a few moments.
+
+---
 
 ## Key Features
 
