@@ -1,141 +1,244 @@
-# aml-analytics
-[![Tests](https://github.com/Bhavesh0205/aml-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/Bhavesh0205/aml-analytics/actions/workflows/ci.yml)
-[![PyPI version](https://badge.fury.io/py/aml-analytics.svg)](https://pypi.org/project/aml-analytics/)
-[![Downloads](https://pepy.tech/badge/aml-analytics/month)](https://pepy.tech/project/aml-analytics)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+# FinTrace — Financial Crime & Transaction Network Analytics
 
-Open-source Python toolkit for AML detection and financial crime as well as fraud analytics— transaction graph analysis, anomaly scoring, authorized push payment (APP) fraud detection, SAR pattern matching, and SQL helpers for BSA/FinCEN compliance.
+FinTrace is an investigator-focused financial crime analytics application for analysing transaction behaviour, identifying suspicious patterns, tracing multi-hop fund movements, and reviewing account-level network risk.
+
+The application integrates transaction analytics, network analysis, and an interactive investigation workspace into a single workflow.
 
 ---
 
-## Why this exists
+## Application Overview
 
-Smaller financial institutions often lack the analytics infrastructure to detect sophisticated money laundering patterns. This toolkit provides open, reusable building blocks — grounded in FATF typologies and FinCEN advisories — that any compliance or data team can use to strengthen their AML detection program.
+FinTrace provides a central workspace for reviewing transaction activity and detected financial crime indicators.
 
----
+![Investigation Overview](screenshots/Overview.png)
 
-## AML typologies covered
+The overview dashboard provides:
 
-| Typology | Module | Reference |
-|---|---|---|
-| Structuring (smurfing) | `aml/patterns.py` | FinCEN Advisory FIN-2014-A005 |
-| Layering | `aml/graph.py` | FATF Typologies Report 2006 |
-| Rapid fund movement | `aml/velocity.py` | FATF Guidance on AML/CFT 2012 |
-| Network-based laundering | `aml/graph.py` | FinCEN Advisory FIN-2022-A001 |
-| Anomalous transaction behavior | `aml/anomaly.py` | FATF Risk-Based Approach 2014 |
+- Transaction and account statistics
+- Structuring case counts
+- Multi-hop layering chain counts
+- Recent transaction activity
+- Dataset category profile
 
 ---
 
-## Modules
+## Key Features
 
-| Module | Description |
-|---|---|
-| `aml/synthetic.py` | Synthetic AML transaction generator with labeled scenarios |
-| `aml/graph.py` | Transaction network analysis — structuring rings, layering chains, centrality scoring |
-| `aml/velocity.py` | Rolling-window velocity checks for burst activity detection |
-| `aml/patterns.py` | Rules engine implementing FATF and FinCEN typologies |
-| `aml/anomaly.py` | Unsupervised anomaly scoring using Isolation Forest and LOF |
-| `aml/sql/` | Oracle and PostgreSQL query templates for AML detection |
-|`aml/fraud.py` |— Authorized Push Payment (APP) fraud scoring with explainable reason codes
+### Pattern Alert Investigation
+
+The alert workspace presents detected transaction behaviours for structured investigator review.
+
+Supported analytical capabilities include:
+
+- Rule-based structuring detection
+- Network-based structuring analysis
+- Multi-hop layering chain detection
+- Transaction velocity analysis
+- Network centrality scoring
+- Account-level investigation
+
+### Transaction Network Analysis
+
+FinTrace models accounts as nodes and transaction relationships as directed connections.
+
+![Network Analysis](screenshots/Networkanalysis.png)
+
+The network workspace supports:
+
+- Interactive fund-flow visualisation
+- Multi-hop transaction path analysis
+- Layering-chain exploration
+- Network risk ranking
+- Central account identification
+- Connected-entity review
+
+### Account Investigation
+
+Investigators can select an account and review its activity, relationships, risk indicators, and detected case involvement.
+
+![Account Investigation](screenshots/Accountinvestigation.png)
+
+The investigation workflow includes:
+
+- Sent and received transaction analysis
+- Network risk scoring
+- Degree and betweenness centrality
+- Top-counterparty review
+- Structuring-case involvement
+- Layering-chain involvement
+- Transaction history
+- System-generated investigation indicators
+- Review prioritisation
+- Exportable CSV case reports
 
 ---
 
-## Quick start
+## Investigation Workflow
 
-```python
-from aml.synthetic import generate_transactions
-from aml.graph import build_network, detect_structuring, detect_layering
-from aml.fraud import score_transactions
-
-# Generate synthetic transaction data
-txns = generate_transactions(n=1000)
-
-# Build a transaction network
-G = build_network(txns)
-
-# Detect structuring rings
-rings = detect_structuring(G, threshold=9000)
-
-# Detect layering chains
-chains = detect_layering(G, min_hops=3)
-
-# score every payment 0-100 for APP fraud risk
-scored = score_transactions(transactions)
-
-# keep the payments worth reviewing
-alerts = scored[scored.app_fraud_score >= 60]
-
-print(f"Structuring alerts: {len(rings)}")
-print(f"Layering alerts:    {len(chains)}")
-print(alerts[["amount", "app_fraud_score", "reason_codes"]])
+```text
+Transaction Dataset
+        |
+        v
+Pattern Detection
+        |
+        v
+Transaction Network Construction
+        |
+        +-----------------------+
+        |                       |
+        v                       v
+Structuring Analysis      Layering Analysis
+        |                       |
+        +-----------+-----------+
+                    |
+                    v
+              Network Scoring
+                    |
+                    v
+          Investigation Workspace
+                    |
+        +-----------+-----------+
+        |           |           |
+        v           v           v
+      Alerts      Network    Account Review
+                                |
+                                v
+                         Case Report Export
 ```
+
+---
+
+## Technology Stack
+
+**Data Analysis:** Python, Pandas, NumPy, Scikit-learn
+
+**Network Analytics:** NetworkX, directed transaction graphs, degree centrality, betweenness centrality, multi-hop path analysis
+
+**Application:** Streamlit, Plotly, interactive data tables and dashboards
+
+**Testing:** Pytest with 61 automated tests
+
+---
+
+## Project Structure
+
+```text
+FinTrace/
+│
+├── aml/
+│   ├── anomaly.py
+│   ├── fraud.py
+│   ├── graph.py
+│   ├── patterns.py
+│   ├── synthetic.py
+│   ├── velocity.py
+│   └── sql/
+│
+├── dashboard/
+│   └── data_loader.py
+│
+├── screenshots/
+│   ├── Accountinvestigation.png
+│   ├── Networkanalysis.png
+│   └── Overview.png
+│
+├── tests/
+│
+├── app.py
+├── transactions.csv
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Demonstration Dataset
+
+The included synthetic dataset contains 1,001 transactions across 50 accounts.
+
+| Category | Transactions |
+| --- | ---: |
+| Normal | 869 |
+| Layering | 52 |
+| Structuring | 50 |
+| Smurfing | 30 |
+| **Total** | **1,001** |
+
+The dataset includes transaction identifiers, sender and receiver accounts, amounts, timestamps, payment channels, countries, and synthetic behavioural labels.
+
+---
+
+## Current Analysis Results
+
+| Analytical Result | Count |
+| --- | ---: |
+| Rule-Based Structuring Alerts | 39 |
+| Network Structuring Cases | 31 |
+| Multi-Hop Layering Chains | 4 |
+| Accounts Analysed | 50 |
+
 ---
 
 ## Installation
 
-```bash
-pip install aml-analytics
-```
-
-Or install from source:
+### Clone the Repository
 
 ```bash
-git clone https://github.com/Bhavesh0205/aml-analytics.git
-cd aml-analytics
-pip install -e ".[dev]"
+git clone https://github.com/hakeemsallauddin/FinTrace-Financial-Crime-Analytics.git
+cd FinTrace-Financial-Crime-Analytics
+```
+
+### Create the Environment
+
+```bash
+conda create -n fintrace python=3.11 -y
+conda activate fintrace
+```
+
+### Install Dependencies
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### Run FinTrace
+
+```bash
+streamlit run app.py
 ```
 
 ---
 
-## Demo notebooks
+## Testing
 
-| Notebook | Description |
-|---|---|
-| `notebooks/01_graph_analysis.ipynb` | Transaction network analysis and layering detection |
-| `notebooks/02_anomaly_detection.ipynb` | Unsupervised anomaly scoring on transaction data |
-| `notebooks/03_sar_patterns.ipynb` | FATF typology rules and SAR pattern matching |
-| `notebooks/04_end_to_end_pipeline.ipynb` | Full AML detection pipeline from raw transactions to alerts |
+Run the complete test suite:
 
----
-
-## Who this is for
-
-- **Compliance analysts** who want to explore analytics-driven AML detection
-- **Data engineers** building transaction monitoring pipelines at financial institutions
-- **Researchers** studying financial crime detection methodology
-- **FinTech developers** building AML capabilities into financial products
-
----
-
-## Disclaimer
-
-This toolkit is built entirely on synthetic data and public regulatory guidance (FATF, FinCEN). It does not contain any proprietary data, internal model logic, or confidential information from any financial institution. It is intended for educational and research purposes and does not constitute legal or compliance advice.
-
----
-
-## Citation
-
-If you use this toolkit in your research or work, please cite it as:
-
-```bibtex
-@software{aml_analytics,
-  author  = {Bhavesh Awalkar},
-  title   = {aml-analytics: Open-source toolkit for AML detection and financial crime analytics},
-  year    = {2024},
-  url     = {https://github.com/Bhavesh0205/aml-analytics},
-  license = {MIT}
-}
+```bash
+python -m pytest tests -v
 ```
 
+Verified result:
+
+```text
+61 passed
+```
+
+The test suite covers anomaly scoring, fraud-risk scoring, graph construction, structuring detection, layering detection, pattern analytics, synthetic data generation, SQL rules, and transaction-velocity analysis.
+
 ---
 
-## Contributing
+## Important Note
 
-Contributions are welcome — especially new typology rules, additional SQL patterns, or improvements to the anomaly scoring module. Please read `CONTRIBUTING.md` before submitting a pull request.
+FinTrace is an analytical screening and educational application. A flagged transaction, account, or relationship is not proof of financial crime and requires review with supporting evidence.
+
+The demonstration dataset is synthetic and contains no real customer or financial institution data.
 
 ---
 
-## License
+## Author
 
-MIT — see `LICENSE` for details.
+**Hakeem Mohammad Sallauddin**
+
+GitHub: `https://github.com/hakeemsallauddin`
+
+LinkedIn: `https://www.linkedin.com/in/hakeem-sallauddin/`
